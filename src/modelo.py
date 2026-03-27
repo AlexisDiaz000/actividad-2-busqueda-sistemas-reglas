@@ -118,9 +118,57 @@ def ejecutar_casos_prueba(modelo, codificadores):
     predecir_ruta(distancia=12.0, tiempo=40, trafico='medio', transbordos=3, 
                  descripcion_caso="Sub-caso 3.2: 3 Transbordos")
 
+def menu_interactivo(modelo, codificadores):
+    print("\n" + "="*50)
+    print(" 🚍 MENÚ INTERACTIVO: CONSULTA TU RUTA 🚍")
+    print("="*50)
+    
+    while True:
+        try:
+            print("\nIntroduce los datos de tu ruta (o escribe 'salir' para terminar):")
+            
+            entrada_distancia = input("Distancia en km (ej. 15.5): ")
+            if entrada_distancia.lower() == 'salir': break
+            distancia = float(entrada_distancia)
+            
+            tiempo = int(input("Tiempo estimado en minutos (ej. 45): "))
+            
+            trafico = input("Nivel de tráfico (bajo / medio / alto): ").lower()
+            if trafico not in ['bajo', 'medio', 'alto']:
+                print("❌ Error: El tráfico debe ser 'bajo', 'medio' o 'alto'. Intenta de nuevo.")
+                continue
+                
+            transbordos = int(input("Número de transbordos (ej. 0, 1, 2): "))
+            
+            # Convertir tráfico a código
+            trafico_cod = codificadores['trafico'][trafico]
+            
+            # Crear DataFrame
+            datos_prueba = pd.DataFrame({
+                'distancia': [distancia],
+                'tiempo': [tiempo],
+                'trafico_cod': [trafico_cod],
+                'transbordos': [transbordos]
+            })
+            
+            # Predecir
+            prediccion_cod = modelo.predict(datos_prueba)[0]
+            
+            print("\n" + "-"*40)
+            if prediccion_cod == 1:
+                print("✅ RESULTADO: El modelo dice que esta es una EXCELENTE RUTA (SI).")
+            else:
+                print("❌ RESULTADO: El modelo dice que DEBES DESCARTAR esta ruta (NO).")
+            print("-"*40)
+            
+        except ValueError:
+            print("❌ Error: Por favor ingresa números válidos para distancia, tiempo y transbordos.")
+
 if __name__ == "__main__":
     # Ejecutar flujo completo
     modelo_entrenado, codificadores = entrenar_modelo()
     
     if modelo_entrenado:
         ejecutar_casos_prueba(modelo_entrenado, codificadores)
+        # Iniciar menú interactivo al final
+        menu_interactivo(modelo_entrenado, codificadores)
