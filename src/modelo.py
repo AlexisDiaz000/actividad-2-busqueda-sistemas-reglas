@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 
@@ -74,6 +75,21 @@ def entrenar_modelo():
     print("\n--- REGLAS APRENDIDAS POR EL ÁRBOL ---")
     reglas = export_text(modelo, feature_names=list(X.columns))
     print(reglas)
+    
+    # Generar y guardar la visualización gráfica del árbol
+    print("\nGenerando imagen del árbol de decisión...")
+    plt.figure(figsize=(15, 10))
+    plot_tree(modelo, 
+              feature_names=list(X.columns),  
+              class_names=['Descartada (NO)', 'Seleccionada (SI)'],
+              filled=True, 
+              rounded=True, 
+              fontsize=10)
+    
+    ruta_imagen = os.path.join(os.path.dirname(__file__), '..', 'docs', 'arbol_decision.png')
+    plt.savefig(ruta_imagen, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Imagen guardada exitosamente en: {os.path.abspath(ruta_imagen)}")
     
     return modelo, codificadores
 

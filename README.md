@@ -52,3 +52,6 @@ proyecto-rutas/
 
 ## Lógica del Sistema
 El sistema penaliza rutas con alto tráfico y múltiples transbordos, dando prioridad a trayectos cortos en tiempo. Para más detalles técnicos, consulta la carpeta `docs/`.
+
+## Árbol de Decisión
+En la carpeta `docs/` encontrarás el archivo `arbol_decision.png` que muestra visualmente las reglas aprendidas por el modelo para clasificar las rutas.
