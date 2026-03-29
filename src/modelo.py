@@ -99,9 +99,9 @@ def ejecutar_casos_prueba(modelo, codificadores):
         prediccion_cod = modelo.predict(datos_prueba)[0]
         resultado = "Ruta SELECCIONADA (SI)" if prediccion_cod == 1 else "Ruta DESCARTADA (NO)"
         
-        print(f"\n📌 {descripcion_caso}")
+        print(f"\n{descripcion_caso}")
         print(f"Entrada: Tráfico={trafico}, Tiempo={tiempo}min, Distancia={distancia}km, Transbordos={transbordos}")
-        print(f"👉 Resultado de la predicción: {resultado}")
+        print(f"Resultado de la predicción: {resultado}")
         
     # Caso 1: Bajo tráfico, tiempo corto
     predecir_ruta(distancia=10.0, tiempo=20, trafico='bajo', transbordos=0, 
@@ -112,7 +112,7 @@ def ejecutar_casos_prueba(modelo, codificadores):
                  descripcion_caso="Caso 2: Alto tráfico")
                  
     # Caso 3: Mismo tiempo, distinto número de transbordos (Evaluaremos 2 sub-casos)
-    print("\n📌 Caso 3: Comparación con mismo tiempo y distintos transbordos")
+    print("\nCaso 3: Comparación con mismo tiempo y distintos transbordos")
     predecir_ruta(distancia=12.0, tiempo=40, trafico='medio', transbordos=1, 
                  descripcion_caso="Sub-caso 3.1: 1 Transbordo")
     predecir_ruta(distancia=12.0, tiempo=40, trafico='medio', transbordos=3, 
@@ -120,7 +120,7 @@ def ejecutar_casos_prueba(modelo, codificadores):
 
 def menu_interactivo(modelo, codificadores):
     print("\n" + "="*50)
-    print(" 🚍 MENÚ INTERACTIVO: CONSULTA TU RUTA 🚍")
+    print(" MENÚ INTERACTIVO: CONSULTA TU RUTA ")
     print("="*50)
     
     while True:
@@ -135,7 +135,7 @@ def menu_interactivo(modelo, codificadores):
             
             trafico = input("Nivel de tráfico (bajo / medio / alto): ").lower()
             if trafico not in ['bajo', 'medio', 'alto']:
-                print("❌ Error: El tráfico debe ser 'bajo', 'medio' o 'alto'. Intenta de nuevo.")
+                print("Error: El tráfico debe ser 'bajo', 'medio' o 'alto'. Intenta de nuevo.")
                 continue
                 
             transbordos = int(input("Número de transbordos (ej. 0, 1, 2): "))
@@ -156,13 +156,13 @@ def menu_interactivo(modelo, codificadores):
             
             print("\n" + "-"*40)
             if prediccion_cod == 1:
-                print("✅ RESULTADO: El modelo dice que esta es una EXCELENTE RUTA (SI).")
+                print("RESULTADO: El modelo dice que esta es una EXCELENTE RUTA (SI).")
             else:
-                print("❌ RESULTADO: El modelo dice que DEBES DESCARTAR esta ruta (NO).")
+                print("RESULTADO: El modelo dice que DEBES DESCARTAR esta ruta (NO).")
             print("-"*40)
             
         except ValueError:
-            print("❌ Error: Por favor ingresa números válidos para distancia, tiempo y transbordos.")
+            print("Error: Por favor ingresa números válidos para distancia, tiempo y transbordos.")
 
 if __name__ == "__main__":
     # Ejecutar flujo completo

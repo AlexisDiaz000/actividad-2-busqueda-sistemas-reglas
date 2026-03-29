@@ -3,7 +3,6 @@
 Este documento detalla la estructura y el origen de los datos utilizados para entrenar el modelo del **Sistema Inteligente de Selección de Rutas**.
 
 ## Origen de los Datos
-
 Los datos fueron generados de manera sintética (simulada) mediante un script en Python (`src/generar_dataset.py`). Se crearon un total de **1,000 registros** que representan diferentes escenarios de rutas de transporte entre distintos puntos de una ciudad teórica.
 
 ## Diccionario de Variables
