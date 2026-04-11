@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
@@ -59,21 +60,38 @@ def entrenar_modelo():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
     # Modelo 1: Decision Tree (Árbol de Decisión)
+    inicio_dt = time.time()
     modelo_dt = DecisionTreeClassifier(random_state=42, max_depth=4)
     modelo_dt.fit(X_train, y_train)
     y_pred_dt = modelo_dt.predict(X_test)
+    fin_dt = time.time()
+    tiempo_dt = (fin_dt - inicio_dt) * 1000 # en milisegundos
     acc_dt = accuracy_score(y_test, y_pred_dt)
     
     # Modelo 2: Random Forest (Bosque Aleatorio)
+    inicio_rf = time.time()
     modelo_rf = RandomForestClassifier(random_state=42, n_estimators=100, max_depth=4)
     modelo_rf.fit(X_train, y_train)
     y_pred_rf = modelo_rf.predict(X_test)
+    fin_rf = time.time()
+    tiempo_rf = (fin_rf - inicio_rf) * 1000 # en milisegundos
     acc_rf = accuracy_score(y_test, y_pred_rf)
     
     # Evaluar los modelos
-    print("\n--- RESULTADOS DE PRECISIÓN (ACCURACY) ---")
-    print(f"Árbol de Decisión: {acc_dt * 100:.2f}%")
-    print(f"Random Forest:     {acc_rf * 100:.2f}%")
+    print("\n--- RESULTADOS DE PRECISIÓN Y VELOCIDAD ---")
+    print(f"Árbol de Decisión: {acc_dt * 100:.2f}% de precisión | Tiempo: {tiempo_dt:.2f} ms")
+    print(f"Random Forest:     {acc_rf * 100:.2f}% de precisión | Tiempo: {tiempo_rf:.2f} ms")
+    
+    # Determinar el ganador
+    if acc_dt == acc_rf:
+        if tiempo_dt < tiempo_rf:
+            print("\nGANADOR GENERAL: Árbol de Decisión (Misma precisión, pero fue más rápido)")
+        else:
+            print("\nGANADOR GENERAL: Random Forest (Misma precisión, pero fue más rápido)")
+    elif acc_dt > acc_rf:
+        print("\nGANADOR GENERAL: Árbol de Decisión (Mayor precisión)")
+    else:
+        print("\nGANADOR GENERAL: Random Forest (Mayor precisión)")
     
     print("\nReporte de Clasificación (Árbol de Decisión):")
     print(classification_report(y_test, y_pred_dt, target_names=['NO (0)', 'SI (1)']))
