@@ -1,22 +1,25 @@
 # Pruebas y Resultados del Modelo
 
-Este documento expone los resultados de la evaluación del modelo **Decision Tree Classifier** y los casos de prueba manuales ejecutados para validar su lógica.
+Este documento expone los resultados de la evaluación de los modelos de aprendizaje automático y los casos de prueba manuales ejecutados para validar su lógica.
 
-## Resultados del Entrenamiento
+## Resultados del Entrenamiento y Comparativa
 
 El dataset de 1000 registros fue dividido en:
-
 - **Datos de Entrenamiento:** 80% (800 registros)
 - **Datos de Prueba:** 20% (200 registros)
 
-El modelo logró aprender con éxito las reglas de negocio implementadas en la generación de datos.
+Se entrenaron dos modelos distintos para comparar su rendimiento al aprender las reglas de negocio implementadas en la generación de datos.
 
-### Métricas de Evaluación
+### Precisión (Accuracy) de los Modelos
+- **Árbol de Decisión (Decision Tree):** `99.50%`
+- **Bosque Aleatorio (Random Forest):** `99.50%`
 
-- **Accuracy (Precisión General):** `99.50%`
-- **F1-Score (Promedio macro):** `0.99`
+*Análisis:* Ambos modelos alcanzan una precisión casi perfecta. Esto ocurre porque el dataset está regido por reglas condicionales deterministas (tráfico, tiempo, transbordos), y los algoritmos basados en árboles son matemáticamente ideales para mapear y replicar este tipo de lógicas estrictas.
 
-*Análisis:* La altísima precisión se debe a que el modelo (Árbol de Decisión) es perfecto para mapear reglas lógicas condicionales. El árbol determinó correctamente que las variables más críticas para tomar la decisión eran el `tiempo` (<= 47.5 min), los `transbordos` (<= 1) y el `tráfico`.
+## Importancia de Variables (Feature Importance)
+Al analizar el modelo Random Forest para entender **cómo tomó las decisiones**, se generó el gráfico `importancia_variables.png` (disponible en esta misma carpeta).
+
+El modelo determinó que la variable más crítica es el **tiempo**, seguido muy de cerca por los **transbordos**, y finalmente el **tráfico**. La distancia en kilómetros no afectó directamente la clasificación de la "mejor ruta" (ya que la regla de negocio original se basaba en el tiempo total), demostrando que el modelo aprendió a ignorar las variables irrelevantes.
 
 ***
 

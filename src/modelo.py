@@ -2,8 +2,10 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 
@@ -50,36 +52,57 @@ def entrenar_modelo():
     X, y, df, codificadores = cargar_y_preprocesar()
     
     if X is None:
-        return
+        return None, None
         
-    print("\n--- FASE DE ENTRENAMIENTO ---")
+    print("\n--- FASE DE ENTRENAMIENTO Y COMPARATIVA DE MODELOS ---")
     # Dividir en conjunto de entrenamiento (80%) y prueba (20%)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    # Inicializar el modelo Decision Tree
-    # Usamos max_depth para que el árbol no se vuelva muy complejo y sea interpretable
-    modelo = DecisionTreeClassifier(random_state=42, max_depth=4)
+    # Modelo 1: Decision Tree (Árbol de Decisión)
+    modelo_dt = DecisionTreeClassifier(random_state=42, max_depth=4)
+    modelo_dt.fit(X_train, y_train)
+    y_pred_dt = modelo_dt.predict(X_test)
+    acc_dt = accuracy_score(y_test, y_pred_dt)
     
-    # Entrenar el modelo
-    modelo.fit(X_train, y_train)
+    # Modelo 2: Random Forest (Bosque Aleatorio)
+    modelo_rf = RandomForestClassifier(random_state=42, n_estimators=100, max_depth=4)
+    modelo_rf.fit(X_train, y_train)
+    y_pred_rf = modelo_rf.predict(X_test)
+    acc_rf = accuracy_score(y_test, y_pred_rf)
     
-    # Realizar predicciones con el conjunto de prueba
-    y_pred = modelo.predict(X_test)
+    # Evaluar los modelos
+    print("\n--- RESULTADOS DE PRECISIÓN (ACCURACY) ---")
+    print(f"Árbol de Decisión: {acc_dt * 100:.2f}%")
+    print(f"Random Forest:     {acc_rf * 100:.2f}%")
     
-    # Evaluar el modelo
-    print("\n--- MÉTRICAS DEL MODELO ---")
-    print(f"Precisión (Accuracy): {accuracy_score(y_test, y_pred) * 100:.2f}%")
-    print("\nReporte de Clasificación:")
-    print(classification_report(y_test, y_pred, target_names=['NO (0)', 'SI (1)']))
+    print("\nReporte de Clasificación (Árbol de Decisión):")
+    print(classification_report(y_test, y_pred_dt, target_names=['NO (0)', 'SI (1)']))
+    
+    # --- ANÁLISIS DE IMPORTANCIA DE VARIABLES ---
+    print("\n--- ANÁLISIS DE IMPORTANCIA DE VARIABLES ---")
+    importancias = modelo_rf.feature_importances_
+    variables = X.columns
+    
+    plt.figure(figsize=(10, 6))
+    # Usamos hue=variables y legend=False para evitar warnings en nuevas versiones de seaborn
+    sns.barplot(x=importancias, y=variables, hue=variables, legend=False, palette='viridis')
+    plt.title('Importancia de las Variables en la Selección de Rutas (Random Forest)')
+    plt.xlabel('Nivel de Importancia (0 a 1)')
+    plt.ylabel('Variables del Dataset')
+    
+    ruta_importancia = os.path.join(os.path.dirname(__file__), '..', 'docs', 'importancia_variables.png')
+    plt.savefig(ruta_importancia, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Gráfico de importancia guardado exitosamente en: {os.path.abspath(ruta_importancia)}")
     
     print("\n--- REGLAS APRENDIDAS POR EL ÁRBOL ---")
-    reglas = export_text(modelo, feature_names=list(X.columns))
+    reglas = export_text(modelo_dt, feature_names=list(X.columns))
     print(reglas)
     
     # Generar y guardar la visualización gráfica del árbol
     print("\nGenerando imagen del árbol de decisión...")
     plt.figure(figsize=(15, 10))
-    plot_tree(modelo, 
+    plot_tree(modelo_dt, 
               feature_names=list(X.columns),  
               class_names=['Descartada (NO)', 'Seleccionada (SI)'],
               filled=True, 
@@ -91,7 +114,7 @@ def entrenar_modelo():
     plt.close()
     print(f"Imagen guardada exitosamente en: {os.path.abspath(ruta_imagen)}")
     
-    return modelo, codificadores
+    return modelo_dt, codificadores
 
 def ejecutar_casos_prueba(modelo, codificadores):
     print("\n" + "="*40)
