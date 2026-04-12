@@ -185,13 +185,13 @@ def menu_interactivo(modelo_dt, modelo_rf, acc_dt, acc_rf, codificadores):
                 pred_dt = modelo_dt.predict(datos_prueba)[0]
                 tiempo_pred_dt = (time.time() - inicio_pred_dt) * 1000
                 
-                print("🌳 ÁRBOL DE DECISIÓN:")
+                print(" ÁRBOL DE DECISIÓN:")
                 print(f"Precisión global del modelo: {acc_dt * 100:.2f}%")
                 print(f"Velocidad de respuesta:      {tiempo_pred_dt:.4f} ms")
                 if pred_dt == 1:
-                    print("Decisión de Ruta:            ✅ SELECCIONADA (SI)")
+                    print("Decisión de Ruta:             SELECCIONADA (SI)")
                 else:
-                    print("Decisión de Ruta:            ❌ DESCARTADA (NO)")
+                    print("Decisión de Ruta:             DESCARTADA (NO)")
                 print("-" * 50)
                 
             if seleccion_modelo in ['2', '3']:
@@ -200,13 +200,13 @@ def menu_interactivo(modelo_dt, modelo_rf, acc_dt, acc_rf, codificadores):
                 pred_rf = modelo_rf.predict(datos_prueba)[0]
                 tiempo_pred_rf = (time.time() - inicio_pred_rf) * 1000
                 
-                print("🌲 BOSQUE ALEATORIO (Random Forest):")
+                print(" BOSQUE ALEATORIO (Random Forest):")
                 print(f"Precisión global del modelo: {acc_rf * 100:.2f}%")
                 print(f"Velocidad de respuesta:      {tiempo_pred_rf:.4f} ms")
                 if pred_rf == 1:
-                    print("Decisión de Ruta:            ✅ SELECCIONADA (SI)")
+                    print("Decisión de Ruta:             SELECCIONADA (SI)")
                 else:
-                    print("Decisión de Ruta:            ❌ DESCARTADA (NO)")
+                    print("Decisión de Ruta:             DESCARTADA (NO)")
                 print("-" * 50)
             
         except ValueError:
